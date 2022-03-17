@@ -1,13 +1,13 @@
 package main
 
 import (
+	ssh_proxy "ssh_proxy/code/ssh.proxy"
 	"time"
-	ssh_proxy "workspace/many.program/code/ssh.proxy"
 )
 
-func main()  {
+func main() {
 	ssh_proxy.Start()
-	for{
-		time.Sleep(1*time.Hour)
+	for {
+		time.Sleep(1 * time.Hour)
 	}
 }

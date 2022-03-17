@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"net"
 	"os"
+	"ssh_proxy/code/common"
 	"time"
-	"workspace/many.program/code/common"
 )
 
 func Start() {
@@ -18,7 +18,7 @@ func Start() {
 func startAction(addrs []connect) {
 	for _, item := range addrs {
 		go func(item connect) {
-			item.sshConfig=new(ssh.ClientConfig)
+			item.sshConfig = new(ssh.ClientConfig)
 			item.config()
 			common.Log("连接目标机器", item.Saddr)
 			item.client = new(ssh.Client)
@@ -29,9 +29,9 @@ func startAction(addrs []connect) {
 			}()
 			item.login(false)
 			go func() {
-				for{
+				for {
 					item.heartbeat()
-					time.Sleep(time.Duration(heartbeattime)*time.Second)
+					time.Sleep(time.Duration(heartbeattime) * time.Second)
 				}
 			}()
 			common.Log("服务器", item.Saddr, "连接成功")
@@ -62,33 +62,33 @@ func startAction(addrs []connect) {
 }
 
 // 登陆远程服务器
-func (i *connect) login(relogin bool)  {
-	for{
+func (i *connect) login(relogin bool) {
+	for {
 		i.client, err = ssh.Dial("tcp", i.Saddr, i.sshConfig)
-		if err==nil {
+		if err == nil {
 			break
 		}
 		if !relogin {
 			common.Error("连接远程服务器", i.Saddr, "失败", err.Error())
 			os.Exit(1)
 		}
-		common.Error("尝试重新连接",i.Saddr,err)
-		time.Sleep(time.Duration(heartbeattime)*time.Second)
+		common.Error("尝试重新连接", i.Saddr, err)
+		time.Sleep(time.Duration(heartbeattime) * time.Second)
 	}
 }
 
-func (i *connect) heartbeat(){
-	s,err:=i.client.NewSession()
+func (i *connect) heartbeat() {
+	s, err := i.client.NewSession()
 	defer func() {
-		if s!=nil {
-			_=s.Close()
+		if s != nil {
+			_ = s.Close()
 		}
 	}()
-	if err!=nil {
+	if err != nil {
 		i.login(true)
 		return
 	}
-	_=s.Run("")
+	_ = s.Run("")
 }
 
 // 配置登陆配置

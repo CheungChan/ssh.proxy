@@ -5,7 +5,7 @@ import (
 	"flag"
 	"io/ioutil"
 	"os"
-	"workspace/many.program/code/common"
+	"ssh_proxy/code/common"
 )
 
 func init() {
